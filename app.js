@@ -4,12 +4,29 @@ const Inpt1 = document.getElementById("Inpt1");
 const Btn = document.getElementById("Btn");
 let TaskArr = [];
 
+window.addEventListener("load", () => {
+  const ParsedArr = JSON.parse(localStorage.getItem("data"));
+  DisplayArr(ParsedArr);
+});
+
 Btn.addEventListener("click", () => {
-  TaskArr.push({
-    title: Inpt.value,
-    date: Inpt1.value,
-  });
-  DisplayArr(TaskArr);
+  if (localStorage.getItem("data")) {
+    const ParsedArr = JSON.parse(localStorage.getItem("data"));
+    ParsedArr.push({
+      title: Inpt.value,
+      date: Inpt1.value,
+    });
+    localStorage.setItem("data", JSON.stringify(ParsedArr));
+    DisplayArr(ParsedArr);
+  } else {
+    TaskArr.push({
+      title: Inpt.value,
+      date: Inpt1.value,
+    });
+    localStorage.setItem("data", JSON.stringify(TaskArr));
+    const ParsedArr = JSON.parse(localStorage.getItem("data"));
+    DisplayArr(ParsedArr);
+  }
 });
 
 const DisplayArr = (arr) => {
@@ -30,7 +47,7 @@ const DisplayArr = (arr) => {
 
 const DeleteTask = (i) => {
   //Function to delete task
-  const FilterArr = TaskArr.filter((elem,index) => {
+  const FilterArr = TaskArr.filter((elem, index) => {
     return index !== i;
   });
   console.log(FilterArr);
@@ -40,7 +57,7 @@ const DeleteTask = (i) => {
 
 const UpdateTask = (i) => {
   //   const RemovedElem = TaskArr.splice(i, 1);
-  let findElem = TaskArr.find((elem,index) => {
+  let findElem = TaskArr.find((elem, index) => {
     return index == i;
   });
   let UpdatedVal = prompt("Enter New Value Of Task...", findElem.title);
